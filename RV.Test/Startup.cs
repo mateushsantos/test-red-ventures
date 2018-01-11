@@ -6,6 +6,11 @@ using Microsoft.Extensions.Logging;
 using RV.Test.Web.Extensions.DependencyInjection;
 using RV.Test.Web.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using RV.Test.Web.Authentication;
+using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace RV.Test
 {
@@ -18,7 +23,9 @@ namespace RV.Test
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        private const string SecretKey = "redventuressupersecretkeynooneshouldknow123!!!@@@";
+        private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
@@ -29,6 +36,21 @@ namespace RV.Test
 
             services.AddDbContext<RvTestContext>(
                 options => options.UseSqlServer(connection));
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SystemAdmin",
+                    policy => policy.RequireClaim("LoggedSystemAdmin", "Admin"));
+            });
+
+            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
+
+            services.Configure<JwtIssuerOptions>(options =>
+            {
+                options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
+                options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
+                options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
+            });
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -46,7 +68,34 @@ namespace RV.Test
                 app.UseDeveloperExceptionPage();
             //}
 
-            app.UseMvc();
+            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
+
+                ValidateAudience = true,
+                ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = _signingKey,
+
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+
+                ClockSkew = TimeSpan.Zero
+            };
+
+            app.AddJwtBearer(new JwtBearerOptions
+            {
+                TokenValidationParameters = tokenValidationParameters
+            });
+
+            app.UseMvc(routes => {
+                routes.MapRoute(
+                        name: "default",
+                        template: "{controller}/{action}/{id?}");
+            });
         }
     }
 }
