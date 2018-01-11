@@ -2,10 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RV.Test.Infra.Repositories;
 using RV.Test.Web.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using RV.Test.Web.Services;
 
 namespace RV.Test.Web.Extensions.DependencyInjection
 {
@@ -15,6 +12,7 @@ namespace RV.Test.Web.Extensions.DependencyInjection
         {
             service.AddTransient(typeof(IRepository<>), typeof(SqlServerRepository<>));
             service.AddTransient<DbContext, RvTestContext>();
+            service.AddTransient<JwtAuthenticationService>();
         }
     }
 }
