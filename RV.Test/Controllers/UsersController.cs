@@ -5,17 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RV.Test.Infra.Repositories;
 using RV.Test.Web.Models;
+using RV.Test.Web.Controllers;
 
 namespace RV.Test.Controllers
 {
     [Route("[controller]")]
-    public class UsersController : Controller
+    public class UsersController : ControllerWithRepository<User>
     {
-        private IRepository<User> _repository;
 
-        public UsersController(IRepository<User> repository)
+        public UsersController(IRepository<User> repository) : base(repository)
         {
-            _repository = repository;
         }
 
         [HttpGet]
