@@ -10,6 +10,7 @@ namespace RV.Test.Infra.Repositories
         Task<T> GetByIdAsync(int id);
         Task InsertAsync(T entity);
         void Update(T entity);
+        Task<ICollection<T>> GetWhereAsync(Func<T, bool> func);
         Task<ICollection<T>> GetAllAsync();
         Task SaveAsync();
     }
