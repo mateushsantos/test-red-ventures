@@ -1,0 +1,18 @@
+﻿version: "3"
+services:
+  web:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+    image: "rv-test"
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+  db:
+    container_name: rvtestdb
+    image: "microsoft/mssql-server-linux"
+    environment:
+      SA_PASSWORD: "RVtest@123@RVtest"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1401:1433"
