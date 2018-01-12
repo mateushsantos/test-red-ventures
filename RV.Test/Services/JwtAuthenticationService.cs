@@ -41,10 +41,9 @@ namespace RV.Test.Web.Services
                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
                 new Claim(JwtRegisteredClaimNames.NameId, applicationUser.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.UniqueName, applicationUser.Id.ToString()),
-                identity.FindFirst("LoggedColiver")
+                identity.FindFirst("LoggedSystemAdmin")
             };
-
-            // Create the JWT security token and encode it.
+            
             var jwt = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,
                 audience: _jwtOptions.Audience,
