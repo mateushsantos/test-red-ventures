@@ -80,8 +80,6 @@ namespace RV.Test
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            app.UseOptions();
-
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -100,11 +98,7 @@ namespace RV.Test
                 app.UseDeveloperExceptionPage();
             //}
 
-            app.UseMvc(routes => {
-                routes.MapRoute(
-                        name: "default",
-                        template: "{controller}/{action}/{id?}");
-            });
+            app.UseMvc();
         }
     }
 }
