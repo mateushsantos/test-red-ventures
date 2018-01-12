@@ -13,6 +13,7 @@ namespace RV.Test.Web.Context
         {
         }
 
+        public DbSet<Admin> Admin { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Widget> Widgets { get; set; }
     }
