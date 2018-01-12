@@ -8,15 +8,18 @@ using System.Threading.Tasks;
 
 namespace RV.Test.Web.Controllers
 {
+    [Route("[controller]")]
     public class AdminController : AuthController
     {
         private JwtAuthenticationService _authService;
 
-        public AdminController(IRepository<Admin> repository) : base(repository)
+        public AdminController(IRepository<Admin> repository, JwtAuthenticationService authService) : base(repository)
         {
+            _authService = authService;
         }
 
         [HttpPost]
+        [Route("[action]")]
         public async Task<IActionResult> SignUp([FromBody]SignUpViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -24,7 +27,7 @@ namespace RV.Test.Web.Controllers
 
             var adminWithSameUsername = await _repository.GetWhereAsync(x => x.Username == viewModel.Username);
 
-            if (adminWithSameUsername != null)
+            if (adminWithSameUsername.Count > 0)
                 return BadRequest();
 
             var admin = new Admin()
@@ -40,6 +43,7 @@ namespace RV.Test.Web.Controllers
         }
 
         [HttpPost]
+        [Route("[action]")]
         public async Task<IActionResult> Authenticate([FromBody]Admin admin)
         {
             var jwt = await _authService.SignWithJwt(admin);
@@ -50,7 +54,7 @@ namespace RV.Test.Web.Controllers
         }
 
         [HttpPut]
-        [Authorize(Policy = "LoggedSystemAdmin")]
+        [Authorize(Policy = "SystemAdmin")]
         public IActionResult Put([FromBody] Admin admin)
         {
             if (admin.Id != LoggedUser.Id)
@@ -61,7 +65,7 @@ namespace RV.Test.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "LoggedSystemAdmin")]
+        [Authorize(Policy = "SystemAdmin")]
         public IActionResult Get()
         {
             return Ok(LoggedUser);

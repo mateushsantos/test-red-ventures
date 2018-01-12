@@ -46,10 +46,5 @@ namespace RV.Test.Controllers
 
             return Ok();
         }
-        
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
     }
 }
