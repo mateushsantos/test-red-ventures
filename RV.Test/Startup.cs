@@ -11,6 +11,9 @@ using System.Text;
 using RV.Test.Web.Authentication;
 using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.Extensions.PlatformAbstractions;
+using System.IO;
 
 namespace RV.Test
 {
@@ -25,7 +28,7 @@ namespace RV.Test
 
         private const string SecretKey = "redventuressupersecretkeynooneshouldknow123!!!@@@";
         private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
@@ -76,16 +79,47 @@ namespace RV.Test
                 options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
                 options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
             });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1",
+                    new Info
+                    {
+                        Title = "RV Test Web API",
+                        Version = "1.0",
+                        Description = "Web API with JWT auth, ASP.NET Core, SQL Server and Docker",
+                        Contact = new Contact
+                        {
+                            Name = "Mateus Hortêncio dos Santos",
+                            Url = "https://github.com/mateushortenciodossantos",
+                            Email = "mateushortenciodossantos@gmail.com"
+                        }
+                    }
+                );
+
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+
+                string appBasePath =
+                    PlatformServices.Default.Application.ApplicationBasePath;
+                string appName =
+                    PlatformServices.Default.Application.ApplicationName;
+                string pathXml =
+                    Path.Combine(appBasePath, $"{appName}.xml");
+
+                c.IncludeXmlComments(pathXml);
+            });
         }
-        
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
-            app.UseCors("CorsPolicy");
-
-            app.UseAuthentication();
 
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
@@ -93,12 +127,23 @@ namespace RV.Test
                 context.Database.EnsureCreated();
             }
 
-            //if (env.IsDevelopment())
-            //{
-                app.UseDeveloperExceptionPage();
-            //}
+            app.UseCors("CorsPolicy");
 
             app.UseMvc();
+
+            app.UseAuthentication();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json",
+                    "RV Test");
+            });
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
         }
     }
 }
