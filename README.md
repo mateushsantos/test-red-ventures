@@ -1,13 +1,36 @@
-# RV Test
+# Red Ventures Backend Test
 
-Primeiro precisamos gerar a imagem docker localmente, rode docker build -t rv-test -f RV.Test/Dockerfile . 
-a partir da raiz do projeto
+Web API using ASP.NET Core, Sql Server and Docker
 
-Depois de gerada a imagem, aloque no mínimo 4gb no Docker-Engine, pois usaremos o SQL Server on Linux e ele é bem pesado
+## Getting Started
 
-rode docker-compose up -d
+These instructions will get you a copy of the project up and running on your local machine.
 
-A aplicação estará disponível em localhost:8080
+### Prerequisites
 
-Para acessar o Swagger é só abrir localhost:8080/swagger
+```
+Docker
+```
 
+### Installing
+
+First of all, let's generate a local docker image from our application
+
+```
+docker build -t rv-test -f RV.Test/Dockerfile .
+```
+
+After built, we need to use docker-compose to run it
+
+```
+docker-compose up -d
+```
+
+After that, the application will be running at localhost:8080, and swagger will be in localhost:8080/swagger
+
+## Built With
+
+* [Docker](https://docs.docker.com/) - The containerization platform
+* [Swagger](https://swagger.io/docs/) - API Tooling 
+* [ASP.NET Core](https://docs.microsoft.com/pt-br/aspnet/core/) - Web Framework
+* [Sql Server](https://docs.microsoft.com/pt-br/sql/linux/quickstart-install-connect-docker) - SQL Database
