@@ -12,14 +12,22 @@ namespace RV.Test.Web.Authentication
 
         public string Audience { get; set; }
 
+        public int MinutesToExpire { get; set; } = 60;
+
         public DateTime NotBefore => DateTime.UtcNow;
 
         public DateTime IssuedAt => DateTime.UtcNow;
 
-        public TimeSpan ValidFor { get; set; } = TimeSpan.FromMinutes(5);
+        public TimeSpan ValidFor
+        {
+            get
+            {
+                return TimeSpan.FromMinutes(MinutesToExpire);
+            }
+        }
 
         public DateTime Expiration => IssuedAt.Add(ValidFor);
-        
+
         public Func<Task<string>> JtiGenerator =>
           () => Task.FromResult(Guid.NewGuid().ToString());
 
