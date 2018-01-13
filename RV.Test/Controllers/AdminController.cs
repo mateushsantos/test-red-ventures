@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace RV.Test.Web.Controllers
 {
     [Route("[controller]")]
-    public class AdminController : AuthController
+    public class AdminController : LoggedUserController
     {
         private JwtAuthenticationService _authService;
 
@@ -18,6 +18,14 @@ namespace RV.Test.Web.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Try to add a new Admin to the system.
+        /// </summary>
+        /// <returns>
+        /// 200 if the admin was created successfully, 422 if some information was missing in the object in the request, 
+        /// 400 if the username already exists.
+        /// </returns>
+        /// <param name="viewModel">Object to make new admin, with password confirmation.</param>
         [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> SignUp([FromBody]SignUpViewModel viewModel)
@@ -42,6 +50,13 @@ namespace RV.Test.Web.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Try authenticate an Admin to the system.
+        /// </summary>
+        /// <returns>
+        /// 200 with an object that represents a Jwt token and an Expiration time in minutes, 403 if admin doesn't exists.
+        /// </returns>
+        /// <param name="admin">Main object that represents and System Admin</param>
         [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> Authenticate([FromBody]Admin admin)
@@ -53,22 +68,22 @@ namespace RV.Test.Web.Controllers
             return Ok(jwt);
         }
 
-        [HttpPut]
-        [Authorize(Policy = "SystemAdmin")]
-        public IActionResult Put([FromBody] Admin admin)
-        {
-            if (admin.Id != LoggedUser.Id)
-                return Forbid();
+        //[HttpPut]
+        //[Authorize(Policy = "SystemAdmin")]
+        //public IActionResult Put([FromBody] Admin admin)
+        //{
+        //    if (admin.Id != LoggedUser.Id)
+        //        return Forbid();
 
-            _repository.Update(admin);
-            return Ok();
-        }
+        //    _repository.Update(admin);
+        //    return Ok();
+        //}
 
-        [HttpGet]
-        [Authorize(Policy = "SystemAdmin")]
-        public IActionResult Get()
-        {
-            return Ok(LoggedUser);
-        }
+        //[HttpGet]
+        //[Authorize(Policy = "SystemAdmin")]
+        //public IActionResult Get()
+        //{
+        //    return Ok(LoggedUser);
+        //}
     }
 }
