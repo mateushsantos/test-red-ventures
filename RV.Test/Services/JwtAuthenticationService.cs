@@ -24,7 +24,7 @@ namespace RV.Test.Web.Services
         }
 
 
-        public async Task<string> SignWithJwt(Admin admin)
+        public async Task<JwtModel> SignWithJwt(Admin admin)
         {
             var tuple = await GetClaimsIdentity(admin);
 
@@ -56,15 +56,13 @@ namespace RV.Test.Web.Services
 
             admin.Password = "";
             
-            var response = new
+            var response = new JwtModel()
             {
-                access_token = encodedJwt,
-                expires_in = (int)_jwtOptions.ValidFor.TotalSeconds,
-                user = applicationUser
+                Token = encodedJwt,
+                ExpiresIn = (int)_jwtOptions.ValidFor.TotalMinutes
             };
-
-            var json = JsonConvert.SerializeObject(response);
-            return json;
+            
+            return response;
         }
 
         private static void ThrowIfInvalidOptions(JwtIssuerOptions options)
