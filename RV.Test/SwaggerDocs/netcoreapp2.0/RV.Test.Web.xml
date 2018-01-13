@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RV.Test.Web</name>
+    </assembly>
+    <members>
+        <member name="M:RV.Test.Web.Controllers.AdminController.SignUp(RV.Test.Web.ViewModels.Admin.SignUpViewModel)">
+            <summary>
+            Try to add a new Admin to the system.
+            </summary>
+            <returns>
+            200 if the admin was created successfully, 422 if some information was missing in the object in the request, 
+            400 if the username already exists.
+            </returns>
+            <param name="viewModel">Object to make new admin, with password confirmation.</param>
+        </member>
+        <member name="M:RV.Test.Web.Controllers.AdminController.Authenticate(RV.Test.Web.Models.Admin)">
+            <summary>
+            Try authenticate an Admin to the system.
+            </summary>
+            <returns>
+            200 with an object that represents a Jwt token and an Expiration time in minutes, 403 if admin doesn't exists.
+            </returns>
+            <param name="admin">Main object that represents and System Admin</param>
+        </member>
+        <member name="M:RV.Test.Web.Controllers.WidgetsController.Get">
+            <summary>
+            Get all Widgets from database
+            </summary>
+            <returns>
+            A list of widgets
+            </returns>
+        </member>
+        <member name="M:RV.Test.Web.Controllers.WidgetsController.Get(System.Int32)">
+            <summary>
+            Try Get a specified widget
+            </summary>
+            <returns>
+            200 with widget, 404 if widget doesn't exist.
+            </returns>
+            <param name="id">Integer that represents an Widget id</param>
+        </member>
+        <member name="M:RV.Test.Web.Controllers.WidgetsController.Post(RV.Test.Web.Models.Widget)">
+            <summary>
+            Try to create a new widget.
+            </summary>
+            <returns>
+            200 if created, 422 if required information was not set.
+            </returns>
+            <param name="widget">Object that represents and Widget</param>
+        </member>
+        <member name="M:RV.Test.Web.Controllers.WidgetsController.Put(System.Int32,RV.Test.Web.Models.Widget)">
+            <summary>
+            Try to update a existent widget.
+            </summary>
+            <returns>
+            200 if updated, 422 if required information was not set, 400 if widget not exists.
+            </returns>
+            <param name="id">Integer that represents an Widget id</param>
+            <param name="widget">Object that represents and Widget</param>
+        </member>
+        <member name="M:RV.Test.Controllers.UsersController.Get">
+            <summary>
+            Get all Users from database
+            </summary>
+            <returns>
+            A list of users
+            </returns>
+        </member>
+        <member name="M:RV.Test.Controllers.UsersController.Get(System.Int32)">
+            <summary>
+            Try Get a specified user
+            </summary>
+            <returns>
+            200 with user, 404 if user doesn't exist.
+            </returns>
+            <param name="id">Integer that represents and User id</param>
+        </member>
+        <member name="M:RV.Test.Controllers.UsersController.Post(RV.Test.Web.Models.User)">
+            <summary>
+            Try to create a new user.
+            </summary>
+            <returns>
+            200 if created, 422 if required information was not set.
+            </returns>
+            <param name="user">Object that represents an User</param>
+        </member>
+    </members>
+</doc>

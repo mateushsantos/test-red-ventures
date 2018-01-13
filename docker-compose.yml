@@ -1,6 +1,7 @@
 ﻿version: "3"
 services:
   web:
+    container_name: rvtestweb
     environment:
       ASPNETCORE_ENVIRONMENT: Production
     image: "rv-test"
