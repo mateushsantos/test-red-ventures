@@ -129,9 +129,9 @@ namespace RV.Test
 
             app.UseCors("CorsPolicy");
 
-            app.UseMvc();
-
             app.UseAuthentication();
+
+            app.UseMvc();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
