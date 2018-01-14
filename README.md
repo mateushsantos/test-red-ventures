@@ -20,7 +20,9 @@ First of all, let's generate a local docker image from our application
 docker build -t rv-test -f RV.Test/Dockerfile .
 ```
 
-After built, we need to use docker-compose to run it
+After built, we need to be sure that the docker engine has at least 4gb or ram allocated for SQL Server,
+
+Then use docker-compose to run everything
 
 ```
 docker-compose up -d
