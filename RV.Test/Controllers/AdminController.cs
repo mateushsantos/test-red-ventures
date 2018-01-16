@@ -56,7 +56,7 @@ namespace RV.Test.Web.Controllers
         /// <returns>
         /// 200 with an object that represents a Jwt token and an Expiration time in minutes, 403 if admin doesn't exists.
         /// </returns>
-        /// <param name="admin">Main object that represents and System Admin, all fields required</param>
+        /// <param name="admin">Main object that represents and System Admin, all fields required, except Id</param>
         [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> Authenticate([FromBody]Admin admin)
