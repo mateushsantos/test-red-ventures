@@ -1,18 +1,23 @@
 ﻿using RV.Test.Infra;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace RV.Test.Web.Models
 {
-    public class Widget : IBaseEntity
+    public class Widget : BaseEntity
     {
-        public int Id { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name cannot be empty")]
         public string Name { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Color cannot be empty")]
         public string Color { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Price cannot be empty")]
         public decimal Price { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Inventory cannot be empty")]
         public int Inventory { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Melts cannot be empty")]
         public bool Melts { get; set; }
     }
 }

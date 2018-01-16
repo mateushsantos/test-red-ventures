@@ -1,15 +1,13 @@
 ﻿using RV.Test.Infra;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace RV.Test.Web.Models
 {
-    public class User : IBaseEntity
+    public class User : BaseEntity
     {
-        public int Id { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name cannot be empty")]
         public string Name { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Gravatar cannot be empty")]
         public string Gravatar { get; set; }
     }
 }
