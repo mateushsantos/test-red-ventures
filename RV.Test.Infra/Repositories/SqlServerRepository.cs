@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RV.Test.Infra.Repositories
 {
-    public class SqlServerRepository<T> : IRepository<T> where T : class
+    public class SqlServerRepository<T> : IRepository<T> where T : BaseEntity
     {
         private DbContext _context;
         private DbSet<T> _dbSet;

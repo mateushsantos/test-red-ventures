@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RV.Test.Infra.Repositories
 {
-    public interface IRepository<T> where  T : class
+    public interface IRepository<T> where  T : BaseEntity
     {
         Task<T> GetByIdAsync(int id);
         Task InsertAsync(T entity);
