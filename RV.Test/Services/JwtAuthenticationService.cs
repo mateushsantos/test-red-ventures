@@ -65,26 +65,6 @@ namespace RV.Test.Web.Services
             return response;
         }
 
-        private static void ThrowIfInvalidOptions(JwtIssuerOptions options)
-        {
-            if (options == null) throw new ArgumentNullException(nameof(options));
-
-            if (options.ValidFor <= TimeSpan.Zero)
-            {
-                throw new ArgumentException("Must be a non-zero TimeSpan.", nameof(JwtIssuerOptions.ValidFor));
-            }
-
-            if (options.SigningCredentials == null)
-            {
-                throw new ArgumentNullException(nameof(JwtIssuerOptions.SigningCredentials));
-            }
-
-            if (options.JtiGenerator == null)
-            {
-                throw new ArgumentNullException(nameof(JwtIssuerOptions.JtiGenerator));
-            }
-        }
-
         private static long ToUnixEpochDate(DateTime date)
           => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
 
