@@ -36,7 +36,7 @@ namespace RV.Test.Web.Controllers
             var adminWithSameUsername = await _repository.GetWhereAsync(x => x.Username == viewModel.Username);
 
             if (adminWithSameUsername.Count > 0)
-                return BadRequest();
+                return BadRequest(new { errors = new[] { "Username with same name already exists"} });
 
             var admin = new Admin()
             {
