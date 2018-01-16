@@ -14,7 +14,7 @@ Docker
 
 ### Installing
 
-First of all, let's generate a local docker image from our application
+First of all, let's generate a local docker image from our application, from the root path
 
 ```
 docker build -t rv-test -f RV.Test/Dockerfile .
@@ -28,7 +28,27 @@ Then use docker-compose to run everything
 docker-compose up -d
 ```
 
-After that, the application will be running at localhost:8080, and swagger will be in localhost:8080/swagger
+After that, the application will be running at localhost:8080, the SQL Server will be at localhost:1401, and swagger will be in localhost:8080/swagger
+
+The containers names are rvtestweb and rvtestdb, to stop it just run
+
+```
+docker stop <container-name>
+```
+
+And then to remove it
+
+```
+docker rm <container-name>
+```
+
+## Swagger and Ideas
+
+To use a Token to authenticate, I've created two routes, /admin/signup and /admin/authenticate
+
+So you first need to Sign Up with an Admin and then Authenticate, it'll return a JWT token, and that's what you'll need to see the other routes and to Authorize in Swagger using Bearer {token}
+
+Also, added a route to POST users, I thought it'd make sense, since users route have 2 GET's
 
 ## Built With
 
