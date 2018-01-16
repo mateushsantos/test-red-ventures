@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RV.Test.Infra.Repositories;
+using RV.Test.Web.Extensions.Controllers;
 using RV.Test.Web.Models;
 using System.Threading.Tasks;
 
@@ -40,7 +41,7 @@ namespace RV.Test.Web.Controllers
             var widgets = await _repository.GetByIdAsync(id);
 
             if (widgets == null)
-                return NotFound();
+                return NotFound(new { errors = new[] { $"A Widget with the id: {id} doesn't exists" } });
 
             return Ok(widgets);
         }
@@ -51,12 +52,12 @@ namespace RV.Test.Web.Controllers
         /// <returns>
         /// 200 if created, 422 if required information was not set.
         /// </returns>
-        /// <param name="widget">Object that represents and Widget</param>
+        /// <param name="widget">Object that represents and Widget, all fields required, except Id</param>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Widget widget)
         {
             if (!ModelState.IsValid)
-                return StatusCode(422);
+                return StatusCode(422, new { errors = this.GetModelStateErrors() });
 
             await _repository.InsertAsync(widget);
             await _repository.SaveAsync();
@@ -71,17 +72,17 @@ namespace RV.Test.Web.Controllers
         /// 200 if updated, 422 if required information was not set, 400 if widget not exists.
         /// </returns>
         /// <param name="id">Integer that represents an Widget id</param>
-        /// <param name="widget">Object that represents and Widget</param>
+        /// <param name="widget">Object that represents and Widget, all fields required, except Id</param>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody]Widget widget)
         {
             if (!ModelState.IsValid)
-                return StatusCode(422);
+                return StatusCode(422, new { errors = this.GetModelStateErrors() });
 
             var oldWidget = await _repository.GetByIdAsync(id);
 
             if (oldWidget == null)
-                return BadRequest();
+                return BadRequest(new { errors = new [] { $"A Widget with the id: {id} doesn't exists, and could not be updated" } });
 
             UpdateWidgetProperties(widget, oldWidget);
 

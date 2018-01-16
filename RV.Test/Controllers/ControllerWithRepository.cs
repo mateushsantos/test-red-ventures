@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RV.Test.Web.Controllers
 {
-    public class ControllerWithRepository<T> : Controller where T : class
+    public class ControllerWithRepository<T> : Controller where T : BaseEntity
     {
         protected IRepository<T> _repository;
 

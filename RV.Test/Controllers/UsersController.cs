@@ -4,6 +4,7 @@ using RV.Test.Infra.Repositories;
 using RV.Test.Web.Models;
 using RV.Test.Web.Controllers;
 using Microsoft.AspNetCore.Authorization;
+using RV.Test.Web.Extensions.Controllers;
 
 namespace RV.Test.Controllers
 {
@@ -36,14 +37,14 @@ namespace RV.Test.Controllers
         /// <returns>
         /// 200 with user, 404 if user doesn't exist.
         /// </returns>
-        /// <param name="id">Integer that represents and User id</param>
+        /// <param name="id">Integer that represents an User id</param>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var user = await _repository.GetByIdAsync(id);
 
             if (user == null)
-                return NotFound();
+                return NotFound(new { errors = new[] { $"An User with the id: {id} doesn't exists" } });
 
             return Ok(user);
         }
@@ -55,12 +56,12 @@ namespace RV.Test.Controllers
         /// <returns>
         /// 200 if created, 422 if required information was not set.
         /// </returns>
-        /// <param name="user">Object that represents an User</param>
+        /// <param name="user">Object that represents an User, all fields required, except Id</param>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]User user)
         {
             if (!ModelState.IsValid)
-                return StatusCode(422);
+                return StatusCode(422, new { errors = this.GetModelStateErrors() });
 
             await _repository.InsertAsync(user);
             await _repository.SaveAsync();
